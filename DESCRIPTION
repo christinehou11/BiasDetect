@@ -1,11 +1,44 @@
 Package: BiasDetect
-Type: Package
-Title: What the Package Does (Title Case)
+Title: Find Biased Features
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Authors@R:
+    c(person(
+        given = "Christine",
+        family = "Hou",
+        role = c("aut", "cre"),
+        email = "chris2018hou@gmail.com",
+        comment = c(ORCID = "0009-0001-5350-0629")
+    ),
+    person(
+        given = "Jacqui",
+        family = "Thompson",
+        role = "aut",
+        email = "jthom338@jh.edu"
+    ),
+    person(
+        given = "Stephanie C.", 
+        family = "Hicks", 
+        role = "aut",
+        email = "shicks19@jhu.edu", 
+        comment = c(ORCID = "0000-0002-7858-0231"))
+    )
+Description: 'BiasDetect' package uses feature selection methods that can 
+        account for batch effects to flag SVGs that may be strongly influenced 
+        by technical factors. By examining the per-gene variance/deviance with 
+        and without a batch effect, we aim to identify features that could be 
+        interfering with the generation of clusters that correspond to known 
+        DLPFC spatial domains.
 License: What license is it under?
 Encoding: UTF-8
-LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown,
+    BiocStyle
+VignetteBuilder: knitr
+biocViews: QualityControl, SpatialTranscriptomics, snRNAseq
+URL: https://christinehou11.github.io/BiasDetect/, https://github.com/christinehou11/BiasDetect
+BugReports: https://github.com/christinehou11/BiasDetect/issues
+Config/testthat/edition: 3
