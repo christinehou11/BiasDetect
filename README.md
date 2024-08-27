@@ -1,7 +1,5 @@
 ## BiasDetect
 
-**Collaborator: Christine Hou, Jacqui Thompson, Stephanie Hicks**
-
 Our goal is to use feature selection methods that can account for batch effects to flag SVGs that may be strongly influenced by technical factors. By examining the per-gene variance/deviance with and without a batch effect, we aim to identify features that could be interfering with the generation of clusters that correspond to known DLPFC spatial domains.
 
 #### Installation
