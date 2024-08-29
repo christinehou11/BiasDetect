@@ -3,7 +3,7 @@ pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
   BiasDetec_vignettes: BiasDetec_vignettes.html
-last_built: 2024-08-27T22:08Z
+last_built: 2024-08-29T01:02Z
 urls:
   reference: https://christinehou11.github.io/BiasDetect/reference
   article: https://christinehou11.github.io/BiasDetect/articles

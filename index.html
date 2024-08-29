@@ -35,7 +35,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/BiasDetec_vignettes.html">UNKNOWN TITLE</a></li>
+<li><a class="dropdown-item" href="articles/BiasDetec_vignettes.html">Find Bias Features</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
@@ -55,7 +55,7 @@
   <main id="main" class="col-md-9"><div class="section level2">
 <h2 id="biasdetect">BiasDetect<a class="anchor" aria-label="anchor" href="#biasdetect"></a>
 </h2>
-<p>Our goal is to use feature selection methods that can account for batch effects to flag SVGs that may be strongly influenced by technical factors. By examining the per-gene variance/deviance with and without a batch effect, we aim to identify features that could be interfering with the generation of clusters that correspond to known DLPFC spatial domains.</p>
+<p><code>BiasDetect</code> is a feature-based Quality Control (QC) for bias genes identification on spatial transcriptomics and snRNA-seq data with some types of batch effect. The <code>BiasDetect</code> method is based on binomial deviance model (<a href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1861-6" class="external-link">Townes et al, 2019</a>) and applies cutoffs based on the standard deviation (SD) of deviance and rank difference metrics as the data-driven thresholding approach to find the batch-biased features.</p>
 <div class="section level4">
 <h4 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h4>
@@ -73,19 +73,14 @@
 <code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"christinehou11/BiasDetect"</span><span class="op">)</span></span></code></pre></div>
 <p>Install additional required packages before running package codes in vignettes.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pkgs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dplyr"</span>, <span class="st">"tidyr"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">pkgs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dplyr"</span>, <span class="st">"tidyr"</span>, <span class="st">"scran"</span>, <span class="st">"scry"</span>, <span class="st">"nnSVG"</span><span class="op">)</span></span>
 <span><span class="va">required_pkgs</span> <span class="op">&lt;-</span> <span class="va">pkgs</span><span class="op">[</span><span class="op">!</span><span class="va">pkgs</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html" class="external-link">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="va">required_pkgs</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="tutorial">Tutorial<a class="anchor" aria-label="anchor" href="#tutorial"></a>
 </h4>
-<p>View the <a href="https://christinehou11.github.io/BiasDetect/articles/BiasDetec_vignettes.html">tutorial</a> written by Christine Hou.</p>
-</div>
-<div class="section level4">
-<h4 id="helpful-link">Helpful Link<a class="anchor" aria-label="anchor" href="#helpful-link"></a>
-</h4>
-<p>View the additional documentation <a href="https://jac-thom.github.io/findBiasedFeatures/" class="external-link">Find Biased Features</a> written by Jacqui Thompson.</p>
+<p>A detailed tutorial is available in <a href="https://jac-thom.github.io/findBiasedFeatures/" class="external-link">Find Biased Features</a> written by Jacqui Thompson.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -99,7 +94,7 @@
 <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li>What license is it under?</li>
+<li><a href="https://www.r-project.org/Licenses/Artistic-2.0" class="external-link">Artistic-2.0</a></li>
 </ul>
 </div>
 
