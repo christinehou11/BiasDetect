@@ -1,0 +1,94 @@
+#' biasDetect
+#'
+#' Function to run 'BiasDetect' method for spatially variable genes (SVGs)
+#' identification on spatial-resolved transcriptomics (SRT) data with some types
+#' of batch effect.
+#'
+#' `BiasDetect` is a feature-based Quality Control (QC) to identify SVGs on
+#' spatial transcriptomics data with sometypes of batch effect. Regarding to the
+#' spatial transcriptomics data experients, the batch can be defined as
+#' "slide" or "subject".The `BiasDetect` method is based on binomial deviance
+#' model (Townes et al, 2019) and applies cutoffs based on the number of
+#' standard deviation (nSD) of deviance and rank difference as the data-driven
+#' thresholding approach to detect the batch-biased features.
+#'
+#'
+#' @param input Input data: assumed to be formatted as a
+#'     \code{SpatialExperiment} object or \code{SingleCellExperiment} with an
+#'     \code{assays} slot named \code{counts} containing raw expression counts.
+#'
+#'
+#' @param batch_effect Batch effect: either \code{slide} or \code{subject} based
+#'     on what metadata is available within input data. The name of \code{slide}
+#'     or \code{subject} within each input object can be different.
+#'
+#' @param nSD_dev number of standard deviation (SD) on deviance difference
+#'
+#' @param nSD_rank number of standard deviation (SD) on rank difference
+#'
+#' @return If the input was provided as a \code{SpatialExperiment} object, the
+#'   output values are returned as additional columns in the \code{rowData} slot
+#'   of the input object. If the input was provided as a \code{numeric} matrix
+#'   of values, the output is returned as a \code{numeric} matrix. The output
+#'   values include spatial variance parameter estimates, likelihood ratio (LR)
+#'   statistics, effect sizes (proportion of spatial variance), p-values, and
+#'   multiple testing adjusted p-values.
+#'
+#'
+#' @importFrom scry devianceFeatureSelection
+#' @importFrom dplyr left_join filter
+#' @importFrom SummarizedExperiment rowData
+#'
+#' @export
+#'
+#' @examples
+biasDetect <-
+    function(input, batch_effect, nSD_dev = 5, nSD_rank = 5) {
+
+    stopifnot(
+
+    )
+
+    spe <- input
+
+    message("Step 1: Running feature selection without batch...")
+    bd <- devianceFeatureSelection(input, assay = "counts", fam = "binomial")
+    bd.df <- .df_maker(bd)
+
+    message("Step 2: Running feature selection with batch...")
+    bd.batch <- devianceFeatureSelection(input, assay = "counts",
+                                        fam = "binomial",
+                                        batch = as.factor(batch_effect))
+    bd.batch.df <- .df_maker(bd.batch)
+
+    message("Step 3: Merging data frames...")
+    batch.df <- left_join(bd.df, bd.batch.df,
+                            by=c("gene", "gene_name"),
+                            suffix=c("_default","_batch"))
+
+    message("Step 4: Calculating deviance and rank difference...")
+    batch.df$d.diff = (batch.df$dev_default-batch.df$dev_batch)/
+                        batch.df$dev_batch
+    batch.df$r.diff = batch.df$rank_batch-batch.df$rank_default
+
+    message("Step 6: SD cutoff: deviance")
+    mean_deviance = mean(batch.df$d.diff)
+    sd_deviance = sd(batch.df$d.diff)
+    batch.df$nSD_dev = (batch.df$d.diff-mean_deviance)/sd_deviance
+    batch.df$dev_outlier = batch.df$nSD_dev >= nSD_dev
+
+    message("Step 7: SD cutoff: rank")
+    mean_rank = mean(batch.df$r.diff)
+    sd_rank = sd(batch.df$r.diff)
+    batch.df$nSD_rank = (batch.df$r.diff-mean_rank)/sd_rank
+    batch.df$rank_outlier = batch.df$nSD_rank >= nSD_rank
+
+    message("Step 8: Cluster results")
+    biased.genes = filter(brain.df, dev_outlier==T | rank_outlier==T)$gene
+    names(biased.genes) = rowData(spe)[biased.genes,"gene_name"]
+
+    message("Function execution complete. The bias genes are:")
+
+    biased.genes
+
+    }

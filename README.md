@@ -1,6 +1,6 @@
 ## BiasDetect
 
-Our goal is to use feature selection methods that can account for batch effects to flag SVGs that may be strongly influenced by technical factors. By examining the per-gene variance/deviance with and without a batch effect, we aim to identify features that could be interfering with the generation of clusters that correspond to known DLPFC spatial domains.
+`BiasDetect` is a feature-based Quality Control (QC) for bias genes identification on spatial transcriptomics and snRNA-seq data with some types of batch effect. The `BiasDetect` method is based on binomial deviance model ([Townes et al, 2019](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1861-6)) and applies cutoffs based on the standard deviation (SD) of deviance and rank difference metrics as the data-driven thresholding approach to find the batch-biased features. 
 
 #### Installation
 
@@ -25,15 +25,11 @@ BiocManager::install("christinehou11/BiasDetect")
 Install additional required packages before running package codes in vignettes.
 
 ``` r
-pkgs <- c("dplyr", "tidyr")
+pkgs <- c("dplyr", "tidyr", "scran", "scry", "nnSVG")
 required_pkgs <- pkgs[!pkgs %in% rownames(installed.packages())]
 BiocManager::install(required_pkgs)
 ```
 
 #### Tutorial
 
-View the [tutorial](https://christinehou11.github.io/BiasDetect/articles/BiasDetec_vignettes.html) written by Christine Hou.
-
-#### Helpful Link
-
-View the additional documentation [Find Biased Features](https://jac-thom.github.io/findBiasedFeatures/) written by Jacqui Thompson.
+A detailed tutorial is available in [Find Biased Features](https://jac-thom.github.io/findBiasedFeatures/) written by Jacqui Thompson.

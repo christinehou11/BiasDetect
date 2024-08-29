@@ -1,0 +1,54 @@
+---
+title: "Find Bias Features"
+author: 
+  - name: Christine Hou
+    affiliation: &id1 "Johns Hopkins Bloomberg School of Public Health, Baltimore, MD, USA"
+  - name: Jacqui Thompson
+    affiliation: *id1
+  - name: Stephanie C. Hicks
+    affiliation: *id1
+package: BiasDetect
+output: 
+  BiocStyle::html_document: 
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{BiasDetect Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>"
+)
+```
+
+
+# Installation
+
+`BiasDetect` is a R package. Install development version from
+[GitHub](https://christinehou11.github.io/BiasDetect):
+
+```{r 'install dev', eval = FALSE}
+remotes::install("christinehou11/BiasDetect")
+```
+
+# Basic User Guide
+
+## Load Necessary Packages
+
+Install additional required packages before running package codes.
+
+```{r 'pkg install', eval=FALSE}
+pkgs <- c("dplyr", "tidyr", "scran", "scry", "nnSVG")
+required_pkgs <- pkgs[!pkgs %in% rownames(installed.packages())]
+BiocManager::install(required_pkgs)
+```
+
+Load additional packages. `dplyr` package is widely used in this vignettes to
+conduct data wrangling and specific information extraction.
+
+```{r 'library', message=FALSE}
+library(BiasDetect)
+```
