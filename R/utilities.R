@@ -7,7 +7,7 @@
                 "dev"= rowData(input)$binomial_deviance,
                 "rank"=(nrow(input)+1)-rank(rowData(input)$binomial_deviance))
 
-    rownames(df) = df$gene
+    rownames(df) <- df$gene
 
     df
     }

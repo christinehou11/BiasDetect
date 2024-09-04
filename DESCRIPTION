@@ -1,6 +1,7 @@
 Package: BiasDetect
+Type: Package
 Title: Find Biased Features
-Version: 0.1.0
+Version: 0.99.0
 Authors@R:
     c(person(
         given = "Christine",
@@ -22,30 +23,35 @@ Authors@R:
         email = "shicks19@jhu.edu", 
         comment = c(ORCID = "0000-0002-7858-0231"))
     )
-Description: 'BiasDetect' package uses feature selection methods that can 
-        account for batch effects to flag SVGs that may be strongly influenced 
-        by technical factors. By examining the per-gene variance/deviance with 
-        and without a batch effect, we aim to identify features that could be 
-        interfering with the generation of clusters that correspond to known 
-        DLPFC spatial domains.
+Description: Our goal is to use feature selection methods that can account for 
+        batch effects to flag SVGs that may be strongly influenced by technical 
+        factors. 'BiasDetect' package builds an alternative R-based interface. 
+        By examining the per-gene variance/deviance with and without a batch 
+        effect, we aim to identify features that could be interfering with the 
+        generation of clusters that correspond to known DLPFC spatial domains.
 License: Artistic-2.0
-Depends: 
-    R (>= 4.2)
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
 Imports:
     scry,
     SummarizedExperiment,
-    dplyr
+    dplyr,
+    ggplot2,
+    gridExtra,
+    RColorBrewer,
+    stats,
+    rlang
 Collate: biasDetect.R utilities.R
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Depends: R (>= 4.3.0)
 Suggests:
     testthat (>= 3.0.0),
     knitr,
     rmarkdown,
     BiocStyle
 VignetteBuilder: knitr
-biocViews: QualityControl, SpatialTranscriptomics, snRNAseq, featureSelection
+biocViews: GeneExpression, Spatial, Transcriptomics, BatchEffect, QualityControl
 URL: https://christinehou11.github.io/BiasDetect/, https://github.com/christinehou11/BiasDetect
 BugReports: https://github.com/christinehou11/BiasDetect/issues
+LazyData: false
 Config/testthat/edition: 3

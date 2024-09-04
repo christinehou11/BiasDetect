@@ -4,7 +4,7 @@
 \alias{biasDetect}
 \title{biasDetect}
 \usage{
-biasDetect(input, batch_effect, nSD = 5)
+biasDetect(input, batch_effect, nSD_dev = 5, nSD_rank = 5, visual = FALSE)
 }
 \arguments{
 \item{input}{Input data: assumed to be formatted as a
@@ -15,7 +15,11 @@ biasDetect(input, batch_effect, nSD = 5)
 on what metadata is available within input data. The name of \code{slide}
 or \code{subject} within each input object can be different.}
 
-\item{nSD}{number of standard deviation (SD): t}
+\item{nSD_dev}{number of standard deviation (nSD) on deviance difference}
+
+\item{nSD_rank}{number of standard deviation (nSD) on rank difference}
+
+\item{visual}{visualization of nSD on deviance or rank difference. Default F}
 }
 \value{
 If the input was provided as a \code{SpatialExperiment} object, the

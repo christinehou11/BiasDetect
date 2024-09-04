@@ -15,3 +15,8 @@ knitr::opts_chunk$set(
 ## ----'library', message=FALSE-------------------------------------------------
 library(BiasDetect)
 
+## ----'sessionInfo', echo=FALSE----------------------------------------------------------------------------------------
+## Session info
+options(width = 120)
+sessionInfo()
+
