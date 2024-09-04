@@ -1,6 +1,18 @@
 ---
 title: "Find Bias Features"
 package: "BiasDetect"
+author:
+  - name: "Christine Hou"
+    affiliation: Department of Biostatistics, Johns Hopkins University
+    email: chris2018hou@gmail.com
+  - name: "Jacqui Thompson"
+    affiliation: Department of Biostatistics, Johns Hopkins University
+    email: jthom338@jh.edu
+  - name: "Stephanie Hicks"
+    affiliation: Department of Biostatistics, Johns Hopkins University
+    email: shicks19@jhu.edu
+output:
+  BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{Find Bias Features}
   %\VignetteEngine{knitr::rmarkdown}
