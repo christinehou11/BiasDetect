@@ -1,32 +1,8 @@
 ---
 title: "Find Bias Features"
-author: 
-  - name: Christine Hou
-    affiliation: "Johns Hopkins Bloomberg School of Public Health, 
-    Baltimore, MD, USA"
-    email: chris2018hou@gmail.com
-  - name: Jacqui Thompson
-    affiliation: "Johns Hopkins Bloomberg School of Public Health, 
-    Baltimore, MD, USA"
-    email: jthom338@jh.edu
-  - name: Stephanie C. Hicks
-    affiliation: "Johns Hopkins Bloomberg School of Public Health, 
-    Baltimore, MD, USA"
-    email: shicks19@jhu.edu
-output: 
-  html_document:
-    toc: true
-    toc_depth: 3
-    toc_float: true
-    number_sections: true
-    self_contained: yes
-    css: header-styles.css
-    highlight: pygments
-    style: symbol
-    df_print: kable
 package: "BiasDetect"
 vignette: >
-  %\VignetteIndexEntry{Find Bias Genes}
+  %\VignetteIndexEntry{Find Bias Features}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
