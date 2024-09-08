@@ -1,64 +1,86 @@
-#' biasDetect
+#' @rdname biasDetect
 #'
-#' Function to run 'BiasDetect' method for spatially variable genes (SVGs)
-#' identification on spatial-resolved transcriptomics (SRT) data with some types
-#' of batch effect.
+#' @name biasDetect
 #'
-#' `BiasDetect` is a feature-based Quality Control (QC) to identify SVGs on
-#' spatial transcriptomics data with sometypes of batch effect. Regarding to the
-#' spatial transcriptomics data experients, the batch can be defined as
-#' "slide" or "subject".The `BiasDetect` method is based on binomial deviance
-#' model (Townes et al, 2019) and applies cutoffs based on the number of
-#' standard deviation (nSD) of deviance and rank difference as the data-driven
-#' thresholding approach to detect the batch-biased features.
+#' @title Find Bias Genes
+#'
+#' @description Function to run 'BiasDetect' method for spatially variable
+#'     genes (SVGs) identification on spatial-resolved transcriptomics (SRT)
+#'     data with some types of batch effect.
 #'
 #'
-#' @param input Input data: assumed to be formatted as a
-#'     \code{SpatialExperiment} object or \code{SingleCellExperiment} with an
-#'     \code{assays} slot named \code{counts} containing raw expression counts.
+#' @param input  \code{SpatialExperiment} or \code{SingleCellExperiment}: Input
+#'     data which can be either \code{SpatialExperiment} or
+#'     \code{SingleCellExperiment}. It is assumed to have an \code{assays} slot
+#'     containing \code{counts} assay for \code{devianceFeatureSelection()} to
+#'     successfully operate and calculate the deviance and rank. The
+#'     \code{logcounts} is strongly recommended to be included in \code{assays}.
+#'     Also, the input data is assumed to set up \code{rownames(input)} as
+#'     \code{genes} and \code{gene_name} in \code{rowData(input)}.
 #'
 #'
-#' @param batch_effect Batch effect: either \code{slide} or \code{subject} based
-#'     on what metadata is available within input data. The name of \code{slide}
-#'     or \code{subject} within each input object can be different.
+#' @param batch_effect \code{character}: either batch on \code{slide} or
+#'     \code{subject} based on what metadata is available within input data.
+#'     The name of \code{slide} or \code{subject} within each input object
+#'     should be specified based on different scenarios.
 #'
-#' @param nSD_dev number of standard deviation (nSD) on deviance difference
 #'
-#' @param nSD_rank number of standard deviation (nSD) on rank difference
+#' @param nSD_dev \code{integer}: number of standard deviation (nSD) on deviance
+#'     difference. The default value is 5.
 #'
-#' @param visual visualization of nSD on deviance or rank difference. Default F
+#' @param nSD_rank \code{integer}: number of standard deviation (nSD) on rank
+#'     difference. The default value is 5.
 #'
-#' @return If the input was provided as a \code{SpatialExperiment} object, the
-#'   output values are returned as additional columns in the \code{rowData} slot
-#'   of the input object. If the input was provided as a \code{numeric} matrix
-#'   of values, the output is returned as a \code{numeric} matrix. The output
-#'   values include spatial variance parameter estimates, likelihood ratio (LR)
-#'   statistics, effect sizes (proportion of spatial variance), p-values, and
-#'   multiple testing adjusted p-values.
+#' @param VGs \code{character}: highly variable genes (HVGs) for
+#'     \code{SingleCelleExperiment} object or spatially variable genes (SVGs)
+#'     for \code{SpatialExperiment} object. If it is a data frame, it is assumed
+#'     to contain one column of identified variable genes with column name as
+#'     "gene_name".
+#'
+#' @param visual \code{logical}: Whether to display the detected bias genes by
+#'     visualizations of \code{deviance} and \code{rank}. Default = FALSE to
+#'     return the data frame. If it is TRUE, the returned format will be
+#'     two parallel plots presenting bias genes based on both \code{nSD_dev} and
+#'     \code{nSD_rank}.
+#'
+#' @return If the input was provided as a \code{SpatialExperiment} or
+#'     \code{SingleCellExperiment} object, the output values are returned as
+#'     either a data frame or two parallel plots to present the identified bias
+#'     genes.
 #'
 #'
 #' @importFrom scry devianceFeatureSelection
 #' @importFrom dplyr left_join filter
-#' @importFrom SummarizedExperiment rowData
-#' @importFrom ggplot2 ggplot geom_point scale_color_manual
-#'            geom_abline labs theme theme_bw scale_x_log10 scale_y_reverse
-#'            scale_y_log10 aes
-#' @importFrom gridExtra grid.arrange
-#' @importFrom RColorBrewer brewer.pal
+#' @importFrom SummarizedExperiment rowData colData
+#' @importFrom utils read.csv
 #' @importFrom stats sd
-#' @importFrom rlang .data
+#' @importFrom ggplot2 scale_x_log10 scale_y_reverse
+#'            scale_y_log10 aes geom_abline
+#' @importFrom gridExtra grid.arrange
 #'
 #' @export
 #'
 #' @examples
-biasDetect <-
-    function(input, batch_effect, nSD_dev = 5, nSD_rank = 5, visual = FALSE) {
+#' \donttest{
+#' set.seed(123)
+#' spe <- load("inst/data/spe_norm.Rdata")
+#' libd <- read.csv("inst/data/libd-all_nnSVG_p-05-features-df.csv/")
+#' SVGs <- libd$gene_name
+#' biasDetect(spe, batch_effect = "brain", VGs = SVGs, nSD_dev = 5,
+#'         nSD_rank = 6, visual = FALSE)
+#'  biasDetect(spe, batch_effect = "brain", VGs = SVGs, nSD_dev = 5,
+#'         nSD_rank = 6, visual = TRUE)
+#' }
+biasDetect <- function(input, batch_effect = NULL, VGs = NULL, nSD_dev = 5,
+                        nSD_rank = 5, visual = FALSE) {
 
-    stopifnot(
+    stopifnot(.check(input, batch_effect, VGs, nSD_dev, nSD_rank))
 
-    )
-
-    spe <- input
+    if (!is.null(batch_effect)) {
+        if (!batch_effect %in% names(colData(input))) {
+            stop("The batch_effect is not a valid column")}
+        batch_effect <- colData(input)[[batch_effect]]
+    } else { stop("Please provide a valid batch_effect.")}
 
     message("Step 1: Running feature selection without batch...")
     bd <- devianceFeatureSelection(input, assay = "counts", fam = "binomial")
@@ -66,91 +88,35 @@ biasDetect <-
 
     message("Step 2: Running feature selection with batch...")
     bd.batch <- devianceFeatureSelection(input, assay = "counts",
-                                        fam = "binomial",
-                                        batch = as.factor(batch_effect))
+            fam = "binomial",batch = as.factor(batch_effect))
     bd.batch.df <- .df_maker(bd.batch)
 
-    message("Step 3: Merging data frames...")
-    batch.df <- left_join(bd.df, bd.batch.df,
-                            by=c("gene", "gene_name"),
+    message("Step 3: Calculating deviance and rank difference...")
+    batch.df <- left_join(bd.df, bd.batch.df, by=c("gene", "gene_name"),
                             suffix=c("_default","_batch"))
-
-    message("Step 4: Calculating deviance and rank difference...")
+    batch.df <- filter(batch.df, .data$gene_name %in% VGs)
     batch.df$d.diff <- (batch.df$dev_default-batch.df$dev_batch)/
                         batch.df$dev_batch
     batch.df$r.diff <- batch.df$rank_batch-batch.df$rank_default
-
-    message("Step 6: SD cutoff: deviance")
-    mean_deviance <- mean(batch.df$d.diff)
-    sd_deviance <- sd(batch.df$d.diff)
-    batch.df$nSD_dev <- (batch.df$d.diff-mean_deviance)/sd_deviance
-    batch.df$dev_outlier <- batch.df$nSD_dev >= nSD_dev
-
-    message("Step 7: SD cutoff: rank")
-    mean_rank <- mean(batch.df$r.diff)
-    sd_rank <- sd(batch.df$r.diff)
-    batch.df$nSD_rank <- (batch.df$r.diff-mean_rank)/sd_rank
-    batch.df$rank_outlier <- batch.df$nSD_rank >= nSD_rank
-
-    message("Step 8: Cluster results")
-    biased.genes <- filter(batch.df,
-                        .data$dev_outlier==TRUE | .data$rank_outlier==TRUE)$gene
-    names(biased.genes) <- rowData(spe)[biased.genes,"gene_name"]
-
-    message("Function execution complete. The bias genes are:")
+    batch.df <- .sd_cutoff(batch.df, nSD_dev, "dev")
+    batch.df <- .sd_cutoff(batch.df, nSD_rank, "rank")
+    biased.genes.df <- filter(batch.df,
+                    .data$dev_outlier==TRUE | .data$rank_outlier==TRUE)
+    biased.gene <- biased.genes.df$gene
+    names(biased.genes) <- rowData(input)[biased.genes,"gene_name"]
 
     if (visual == TRUE) {
+        plot_dev <- .plot(batch.df, "dev_default", "dev_batch",
+                        nSD_dev, "nSD_dev", "dev") +
+                        scale_x_log10() + scale_y_log10() +
+                        geom_abline(aes(slope = 1, intercept = 0), lty = 2)
 
-        col.pal <- brewer.pal(length(unique(batch.df$nSD.bin_dev)), "YlOrRd")
-        col.pal[1] <- "grey"
-        sd.interval <- nSD_dev
-        batch.df$nSD.bin_dev <- cut(abs(batch.df$nSD_dev), right=FALSE,
-                                breaks=seq(0,
-                                            max(batch.df$nSD_dev)+sd.interval,
-                                            by=sd.interval),
-                                include.lowest=TRUE)
-        dev <- ggplot(batch.df,
-                        aes(x=.data$dev_default,
-                            y=.data$dev_batch,
-                            color=.data$nSD.bin_dev)) +
-                geom_point()+
-                scale_x_log10()+
-                scale_y_log10()+
-                scale_color_manual(values=col.pal)+
-                geom_abline(aes(slope=1, intercept=0), lty=2)+
-                labs(x="deviance (no batch)",
-                        y="deviance (batch)")+
-                theme_bw() +
-                theme(legend.position="none")
-
-        sd.interval <- nSD_rank
-        batch.df$nSD.bin_rank <- cut(abs(batch.df$nSD_rank), right=FALSE,
-                                    breaks=seq(0,
-                                            max(batch.df$nSD_dev)+sd.interval,
-                                            by=sd.interval),
-                                    include.lowest=TRUE)
-        col.pal2 <- brewer.pal(length(unique(batch.df$nSD.bin_rank)),
-                                "YlOrRd")
-        col.pal2[1] <- "grey"
-        rank <- ggplot(batch.df,
-                        aes(x=.data$rank_default,
-                            y=.data$rank_batch,
-                            color=.data$nSD.bin_rank))+
-                geom_point()+
-                scale_y_reverse()+
-                scale_color_manual(values=col.pal2)+
-                geom_abline(aes(slope=-1, intercept=0), lty=2)+
-                labs(x="rank (no batch)",
-                        y="rank (batch)")+
-                theme_bw()+
-                theme(legend.position="none")
-
-        output <- grid.arrange(dev, rank, ncol=2)
-    }
-    else {
-        output <- biased.genes
-    }
-
+        plot_rank <- .plot(batch.df, "rank_default", "rank_batch",
+                        nSD_rank, "nSD_rank", "rank") +
+                        scale_y_reverse() +
+                        geom_abline(aes(slope = -1, intercept = 0), lty = 2)
+        output <- grid.arrange(plot_dev, plot_rank, ncol=2)
+    } else {
+        output <- biased.genes.df }
     output
-
     }

@@ -2,45 +2,70 @@
 % Please edit documentation in R/biasDetect.R
 \name{biasDetect}
 \alias{biasDetect}
-\title{biasDetect}
+\title{Find Bias Genes}
 \usage{
-biasDetect(input, batch_effect, nSD_dev = 5, nSD_rank = 5, visual = FALSE)
+biasDetect(
+  input,
+  batch_effect = NULL,
+  VGs = NULL,
+  nSD_dev = 5,
+  nSD_rank = 5,
+  visual = FALSE
+)
 }
 \arguments{
-\item{input}{Input data: assumed to be formatted as a
-\code{SpatialExperiment} object or \code{SingleCellExperiment} with an
-\code{assays} slot named \code{counts} containing raw expression counts.}
+\item{input}{\code{SpatialExperiment} or \code{SingleCellExperiment}: Input
+data which can be either \code{SpatialExperiment} or
+\code{SingleCellExperiment}. It is assumed to have an \code{assays} slot
+containing \code{counts} assay for \code{devianceFeatureSelection()} to
+successfully operate and calculate the deviance and rank. The
+\code{logcounts} is strongly recommended to be included in \code{assays}.
+Also, the input data is assumed to set up \code{rownames(input)} as
+\code{genes} and \code{gene_name} in \code{rowData(input)}.}
 
-\item{batch_effect}{Batch effect: either \code{slide} or \code{subject} based
-on what metadata is available within input data. The name of \code{slide}
-or \code{subject} within each input object can be different.}
+\item{batch_effect}{\code{character}: either batch on \code{slide} or
+\code{subject} based on what metadata is available within input data.
+The name of \code{slide} or \code{subject} within each input object
+should be specified based on different scenarios.}
 
-\item{nSD_dev}{number of standard deviation (nSD) on deviance difference}
+\item{VGs}{\code{character}: highly variable genes (HVGs) for
+\code{SingleCelleExperiment} object or spatially variable genes (SVGs)
+for \code{SpatialExperiment} object. If it is a data frame, it is assumed
+to contain one column of identified variable genes with column name as
+"gene_name".}
 
-\item{nSD_rank}{number of standard deviation (nSD) on rank difference}
+\item{nSD_dev}{\code{integer}: number of standard deviation (nSD) on deviance
+difference. The default value is 5.}
 
-\item{visual}{visualization of nSD on deviance or rank difference. Default F}
+\item{nSD_rank}{\code{integer}: number of standard deviation (nSD) on rank
+difference. The default value is 5.}
+
+\item{visual}{\code{logical}: Whether to display the detected bias genes by
+visualizations of \code{deviance} and \code{rank}. Default = FALSE to
+return the data frame. If it is TRUE, the returned format will be
+two parallel plots presenting bias genes based on both \code{nSD_dev} and
+\code{nSD_rank}.}
 }
 \value{
-If the input was provided as a \code{SpatialExperiment} object, the
-output values are returned as additional columns in the \code{rowData} slot
-of the input object. If the input was provided as a \code{numeric} matrix
-of values, the output is returned as a \code{numeric} matrix. The output
-values include spatial variance parameter estimates, likelihood ratio (LR)
-statistics, effect sizes (proportion of spatial variance), p-values, and
-multiple testing adjusted p-values.
+If the input was provided as a \code{SpatialExperiment} or
+\code{SingleCellExperiment} object, the output values are returned as
+either a data frame or two parallel plots to present the identified bias
+genes.
 }
 \description{
-Function to run 'BiasDetect' method for spatially variable genes (SVGs)
-identification on spatial-resolved transcriptomics (SRT) data with some types
-of batch effect.
+Function to run 'BiasDetect' method for spatially variable
+genes (SVGs) identification on spatial-resolved transcriptomics (SRT)
+data with some types of batch effect.
 }
-\details{
-\code{BiasDetect} is a feature-based Quality Control (QC) to identify SVGs on
-spatial transcriptomics data with sometypes of batch effect. Regarding to the
-spatial transcriptomics data experients, the batch can be defined as
-"slide" or "subject".The \code{BiasDetect} method is based on binomial deviance
-model (Townes et al, 2019) and applies cutoffs based on the number of
-standard deviation (nSD) of deviance and rank difference as the data-driven
-thresholding approach to detect the batch-biased features.
+\examples{
+\donttest{
+set.seed(123)
+spe <- load("inst/data/spe_norm.Rdata")
+libd <- read.csv("inst/data/libd-all_nnSVG_p-05-features-df.csv/")
+SVGs <- libd$gene_name
+biasDetect(spe, batch_effect = "brain", VGs = SVGs, nSD_dev = 5,
+        nSD_rank = 6, visual = FALSE)
+ biasDetect(spe, batch_effect = "brain", VGs = SVGs, nSD_dev = 5,
+        nSD_rank = 6, visual = TRUE)
+}
 }

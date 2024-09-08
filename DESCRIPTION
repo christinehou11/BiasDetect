@@ -23,12 +23,13 @@ Authors@R:
         email = "shicks19@jhu.edu", 
         comment = c(ORCID = "0000-0002-7858-0231"))
     )
-Description: Our goal is to use feature selection methods that can account for 
-        batch effects to flag SVGs that may be strongly influenced by technical 
-        factors. 'BiasDetect' package builds an alternative R-based interface. 
-        By examining the per-gene variance/deviance with and without a batch 
-        effect, we aim to identify features that could be interfering with the 
-        generation of clusters that correspond to known DLPFC spatial domains.
+Description: `BiasDetect` is a feature-based Quality Control (QC) to identify 
+    SVGs on spatial transcriptomics data with sometypes of batch effect. 
+    Regarding to the spatial transcriptomics data experients, the batch can be 
+    defined as "slide" or "subject".The `BiasDetect` method is based on 
+    binomial deviance model (Townes et al, 2019) and applies cutoffs based on 
+    the number of standard deviation (nSD) of deviance and rank difference as 
+    the data-driven thresholding approach to detect the batch-biased features.
 License: Artistic-2.0
 Imports:
     scry,
@@ -38,7 +39,8 @@ Imports:
     gridExtra,
     RColorBrewer,
     stats,
-    rlang
+    rlang,
+    utils
 Collate: biasDetect.R utilities.R
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
