@@ -40,7 +40,8 @@ Imports:
     RColorBrewer,
     stats,
     rlang,
-    utils
+    tibble,
+    ggrepel
 Collate: biasDetect.R utilities.R
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -55,5 +56,4 @@ VignetteBuilder: knitr
 biocViews: GeneExpression, Spatial, Transcriptomics, BatchEffect, QualityControl
 URL: https://christinehou11.github.io/BiasDetect/, https://github.com/christinehou11/BiasDetect
 BugReports: https://github.com/christinehou11/BiasDetect/issues
-LazyData: false
 Config/testthat/edition: 3
