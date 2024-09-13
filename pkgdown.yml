@@ -2,8 +2,9 @@ pandoc: 3.1.11
 pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
+  analysis: analysis.html
   BiasDetec_vignettes: BiasDetec_vignettes.html
-last_built: 2024-09-10T02:39Z
+last_built: 2024-09-13T03:11Z
 urls:
   reference: https://christinehou11.github.io/BiasDetect/reference
   article: https://christinehou11.github.io/BiasDetect/articles
