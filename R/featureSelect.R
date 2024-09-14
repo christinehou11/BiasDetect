@@ -43,10 +43,15 @@
 #' @export
 #'
 #' @examples
-#' # library(spatialLIBD)
-#' # spe <- fetch_data(type = "spe")
-#'
-#' # featureSelect(spe, batch_effect = "brain", VGs = SVGs)
+#' library(SummarizedExperiment)
+#' data(spe)
+#' spe_svgs <- spe
+#' # the sample dataset here is the SpatialExperiment object containing only
+#' # spatially variable genes
+#' SVGs <- rowData(spe)$gene_name
+#' 
+#' set.seed(123)
+#' batch_df <- featureSelect(spe_svgs, batch_effect = "sample_id", VGs = SVGs)
 #'
 featureSelect <- function(input, batch_effect = NULL, VGs = NULL) {
 

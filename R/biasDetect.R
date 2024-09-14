@@ -38,11 +38,10 @@
 #' @export
 #'
 #' @examples
-#' # library(spatialLIBD)
+#' data(spe)
+#' spe_svgs <- spe
 #'
-#' # batch_df <- featureSelect(spe, batch_effect = "brain", VGs = SVGs)
-#' # biasDetect(batch_df, nSD_dev = 5, nSD_rank = 6)
-#' # biasDetect(batch_df, nSD_dev = 5, nSD_rank = 6, visual = TRUE)
+#' # biasDetect()
 #'
 
 biasDetect <- function(batch_df, nSD_dev = 5, nSD_rank = 5, visual = FALSE) {

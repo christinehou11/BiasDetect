@@ -1,0 +1,83 @@
+---
+title: "Find Bias Features - Spatial Transcriptomics Data"
+package: "BiasDetect"
+author:
+  - name: "Christine Hou"
+    affiliation: Department of Biostatistics, Johns Hopkins University
+    email: chris2018hou@gmail.com
+  - name: "Jacqui Thompson"
+    affiliation: Department of Biostatistics, Johns Hopkins University
+    email: jthom338@jh.edu
+  - name: "Stephanie Hicks"
+    affiliation: Department of Biostatistics, Johns Hopkins University
+    email: shicks19@jhu.edu
+output: BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{01 Find Bias Features - Spatial Transcriptomics Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>"
+)
+```
+
+## Introduction
+
+`BiasDetect` package was developed on an unrelated DLPFC dataset available through the [spatialLIBD](https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-022-08601-w) package. We first chose **binomial deviance model** from [scry](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1861-6) as the feature selection method that can incorporate a batch variable into the model. Next, we compared the per-gene ranks and dispersion values when the model was run with and without a batch effect. Our data-driven thresholding approach is using the cutoffs based on the number of standard deviance (nSD) of deviance and rank difference metrics. Based on self-selected nSD cutoffs, the genes identified as biased can be filtered out.
+
+The methodology details can be found in [Find Bias Feature](https://jac-thom.github.io/findBiasedFeatures/) written by Jacqui Thompson, and the documentation related codes can be found on [GitHub](https://github.com/jac-thom/findBiasedFeatures).
+
+## Tutorial
+
+### Installation
+
+`BiasDetect` is a R package. Install development version from [GitHub](https://christinehou11.github.io/BiasDetect):
+
+```{r 'install dev', eval = FALSE}
+remotes::install("christinehou11/BiasDetect")
+```
+
+### Load Necessary Packages
+
+Install additional required packages before running package codes.
+
+```{r 'pkg install', eval=FALSE}
+pkgs <- c("dplyr", "tidyr", "scran", "scry")
+required_pkgs <- pkgs[!pkgs %in% rownames(installed.packages())]
+BiocManager::install(required_pkgs)
+```
+
+Load additional packages. `dplyr` package is widely used in this vignettes to conduct data wrangling and specific information extraction.
+
+```{r 'library', message=FALSE}
+library(BiasDetect)
+library(SummarizedExperiment)
+library(ggplot2)
+```
+
+### Data
+
+The dataset in this tutorial section is from [spatialHPC](https://github.com/LieberInstitute/spatial_hpc).
+
+```{r data input}
+data(spe)
+spe_svgs <- spe
+SVGs <- rowData(spe)$gene_name
+
+batch_df <- featureSelect(spe_svgs, batch_effect = "sample_id", VGs = SVGs)
+batch_df
+```
+
+### Bias Genes Identification
+
+# `R` session information {.unnumbered}
+
+```{r 'sessionInfo', echo=FALSE}
+## Session info
+options(width = 120)
+sessionInfo()
+```

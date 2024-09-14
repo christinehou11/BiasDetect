@@ -41,9 +41,14 @@ transcriptomics data and calculate the difference of deviance and rank
 with and without the selected batch effect.
 }
 \examples{
-# library(spatialLIBD)
-# spe <- fetch_data(type = "spe")
+library(SummarizedExperiment)
+data(spe)
+spe_svgs <- spe
+# the sample dataset here is the SpatialExperiment object containing only
+# spatially variable genes
+SVGs <- rowData(spe)$gene_name
 
-# featureSelect(spe, batch_effect = "brain", VGs = SVGs)
+set.seed(123)
+batch_df <- featureSelect(spe_svgs, batch_effect = "sample_id", VGs = SVGs)
 
 }

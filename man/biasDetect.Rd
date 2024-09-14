@@ -33,10 +33,9 @@ Function to filter out the bias genes based on selected
 selected threshold of nSD of deviance and rank in data frame or plot.
 }
 \examples{
-# library(spatialLIBD)
+data(spe)
+spe_svgs <- spe
 
-# batch_df <- featureSelect(spe, batch_effect = "brain", VGs = SVGs)
-# biasDetect(batch_df, nSD_dev = 5, nSD_rank = 6)
-# biasDetect(batch_df, nSD_dev = 5, nSD_rank = 6, visual = TRUE)
+# biasDetect()
 
 }
