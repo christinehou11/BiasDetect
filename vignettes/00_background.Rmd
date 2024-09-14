@@ -1,5 +1,5 @@
 ---
-title: "00 Background"
+title: "Background"
 package: "BiasDetect"
 author:
   - name: "Christine Hou"
@@ -11,14 +11,7 @@ author:
   - name: "Stephanie Hicks"
     affiliation: Department of Biostatistics, Johns Hopkins University
     email: shicks19@jhu.edu
-output:
-  BiocStyle::html_document
-    self_contained: yes
-    toc: true
-    toc_float: true
-    toc_depth: 2
-    code_folding: show
-date: "`r doc_date()`"
+output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{00 Background}
   %\VignetteEngine{knitr::rmarkdown}
@@ -28,7 +21,8 @@ vignette: >
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
     collapse = TRUE,
-    comment = "#>"
+    comment = "#>",
+    eval = FALSE
 )
 ```
 
@@ -57,7 +51,7 @@ We used [nnSVG](https://www.nature.com/articles/s41467-023-39748-z) to select 20
 *Figure 1.1 PRECAST clusters: 2098 input features (SVGs), K=7*
 
 <p align="center">
-![Spatial Registration Overview](https://github.com/christinehou11/BiasDetect/reference/figures/precast_k7.png){width=100%}
+![Spatial Registration Overview](https://github.com/christinehou11/BiasDetect/reference/figures/precast_k7.png){width=80%}
 </p>
 
 *Figure 1.2 PRECAST clusters: 2098 input features (SVGs), K=8*

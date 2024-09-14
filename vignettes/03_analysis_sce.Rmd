@@ -1,0 +1,27 @@
+---
+title: "Analysis - snRNA-seq Data"
+package: "BiasDetect"
+author:
+  - name: "Christine Hou"
+    affiliation: Department of Biostatistics, Johns Hopkins University
+    email: chris2018hou@gmail.com
+  - name: "Jacqui Thompson"
+    affiliation: Department of Biostatistics, Johns Hopkins University
+    email: jthom338@jh.edu
+  - name: "Stephanie Hicks"
+    affiliation: Department of Biostatistics, Johns Hopkins University
+    email: shicks19@jhu.edu
+output: BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{03 Analysis - snRNA-seq Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>"
+)
+```

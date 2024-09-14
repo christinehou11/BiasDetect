@@ -11,10 +11,9 @@ author:
   - name: "Stephanie Hicks"
     affiliation: Department of Biostatistics, Johns Hopkins University
     email: shicks19@jhu.edu
-output:
-  BiocStyle::html_document
+output: BiocStyle::html_document
 vignette: >
-  %\VignetteIndexEntry{Find Bias Features}
+  %\VignetteIndexEntry{01 Find Bias Features}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
