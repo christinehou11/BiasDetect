@@ -50,15 +50,15 @@ We used [nnSVG](https://www.nature.com/articles/s41467-023-39748-z) to select 20
 
 *Figure 1.1 PRECAST clusters: 2098 input features (SVGs), K=7*
 
-<p align="center">
-![Spatial Registration Overview](https://github.com/christinehou11/BiasDetect/reference/figures/precast_k7.png){width=80%}
-</p>
+```{r precast k7, echo=FALSE,out.width="80%"}
+knitr::include_graphics("./man/figures/precast_k7.png")
+```
 
 *Figure 1.2 PRECAST clusters: 2098 input features (SVGs), K=8*
 
-<p align="center">
-![Spatial Registration Overview](https://github.com/christinehou11/BiasDetect/reference/figures/precast_k8.png){width=100%}
-</p>
+```{r precast k8, echo=FALSE,out.width="80%"}
+knitr::include_graphics("./man/figures/precast_k8.png")
+```
 
 The lack of distinction between L5 and L6 did not appear to be due under-representation of known gene markers for these cortical layers in the SVG set. (DLPFC layer markers pulled from [Huuki-Meyers et. al, 2024](https://www.science.org/doi/abs/10.1126/science.adh1938) Table S8.)
 
