@@ -46,7 +46,7 @@ remotes::install("christinehou11/BiasDetect")
 Install additional required packages before running package codes.
 
 ```{r 'pkg install', eval=FALSE}
-pkgs <- c("dplyr", "tidyr", "scran", "scry")
+pkgs <- c("dplyr", "tidyr", "scry", "SummarizedExperiment","SpatialExperiment")
 required_pkgs <- pkgs[!pkgs %in% rownames(installed.packages())]
 BiocManager::install(required_pkgs)
 ```
@@ -55,8 +55,9 @@ Load additional packages. `dplyr` package is widely used in this vignettes to co
 
 ```{r 'library', message=FALSE}
 library(BiasDetect)
-library(SummarizedExperiment)
-library(ggplot2)
+require(SummarizedExperiment)
+require(SpatialExperiment)
+require(ggplot2)
 ```
 
 ### Data
