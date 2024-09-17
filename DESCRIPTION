@@ -49,7 +49,11 @@ Suggests:
     testthat (>= 3.0.0),
     knitr,
     rmarkdown,
-    BiocStyle
+    BiocStyle,
+    PRECAST,
+    ggspavis,
+    scater,
+    SpatialExperiment
 VignetteBuilder: knitr
 biocViews: GeneExpression, Spatial, Transcriptomics, BatchEffect, QualityControl
 URL: https://christinehou11.github.io/BiasDetect/, https://github.com/christinehou11/BiasDetect

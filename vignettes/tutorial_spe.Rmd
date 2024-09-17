@@ -61,25 +61,114 @@ Load required packages
 ```{r 'library', message=FALSE}
 library("BiasDetect")
 library("SummarizedExperiment")
+library("SpatialExperiment")
 library("ggplot2")
+library("PRECAST")
+library("scater")
+library("ggspavis")
 ```
 
 ### Data
 
 The dataset in this tutorial section is from [spatialHPC](https://github.com/LieberInstitute/spatial_hpc).
 
-The original `SpatialExperiment` object was processed by `nnSVG()` function to identify the spatially variable genes (SVGs), and the sample spe object was obtained by filtering out the SVGs. This is specifically designed for our analysis section since the big size of the original 
+We used [nnSVG](https://www.nature.com/articles/s41467-023-39748-z) to filter out 2082 statistically significant spatially variable genes (SVGs) and saved in a new `spe` object. The filtered new `spe` object used for the vignettes is [here](https://github.com/christinehou11/BiasDetect/blob/main/data/spe.rda).
 
-```{r data input}
+```{r data input,message=FALSE, warning=FALSE}
 data(spe)
 spe_svgs <- spe
-SVGs <- rowData(spe)$gene_name
-
-batch_df <- featureSelect(spe_svgs, batch_effect = "sample_id", VGs = SVGs)
-batch_df
+SVGs <- rowData(spe_svgs)$gene_name
 ```
 
 ### Bias Genes Identification
+
+The data frame created from `featureSelect()` function includes `nSD_dev` and `nSD_rank`, and we can use `biasDetect()` function to identify the bias genes based on the self-selected `nSD` integer thresholds for deviance and rank respectively. The default threshold is 5 for deviance and 5 for rank.
+
+``` {r feature select}
+batch_df <- featureSelect(spe_svgs, batch_effect = "sample_id", VGs = SVGs)
+dim(batch_df)
+head(batch_df)
+```
+
+What's more, `biasDetect` function allows to return the biased genes either in data frame format or in plots. The default format is in data frame.
+
+```{r bias genes identification}
+bias <- biasDetect(batch_df = batch_df, nSD_dev = 10, nSD_rank = 5)
+bias
+```
+
+To see the plots, add `visual = TRUE`.
+
+```{r visual}
+biasDetect(batch_df = batch_df, nSD_dev = 10, nSD_rank = 5, visual = TRUE)
+```
+
+Finally, we can obtain a new `spe` object by removing all biased genes.
+
+```{r new spe}
+svgs_filt = setdiff(rownames(spe_svgs), bias)
+length(svgs_filt)
+```
+
+
+### Clustering
+
+We can apply [PRECAST](https://www.nature.com/articles/s41467-023-35947-w) to identify clusters using K = 7. As we can see, the cluster are successfully distinguished after we remove the bias genes, which proves the practicability of our method.
+
+```{r clustering, message=FALSE, warning=FALSE}
+path1 <- system.file("extdata","seuInt-hpc_k-7_svgs_metadata.csv", package="BiasDetect")
+clusters1 <- read.csv(path1, row.names = 1)
+dim(clusters1)
+identical(rownames(clusters1), rownames(colData(spe_svgs)))
+spe_svgs$precast_k7 = clusters1$cluster
+spe_svgs$precast_k7_ordered = factor(
+    spe_svgs$precast_k7, levels=c(7,2,3,1,6,5,4), 
+    labels=c("WM","WM (2)","SR/SL","CA1","CA3","DG GCL","DG ML"))
+
+path2 <- system.file("extdata","seuInt-hpc_k-7_svgs-no-bias_metadata.csv", package="BiasDetect")
+clusters2 <- read.csv(path2, row.names = 1)
+identical(rownames(clusters2), rownames(colData(spe_svgs)))
+spe_svgs$precast_k7_nobias = clusters2$cluster
+spe_svgs$precast_k7_nobias_ordered= factor(
+    spe_svgs$precast_k7_nobias, levels=c(1,2,7,5,6,4,3),
+    labels=c("WM","SR/SL","CA1","CA1 (2)","CA3","DG GCL","DG ML"))
+
+spe_svgs <- logNormCounts(spe_svgs)
+markers = c("MBP","GFAP","SPARCL1","FIBCD1","COL5A2","KCNQ5","CARTPT","PCDH8","CALB1")
+plotGroupedHeatmap(spe_svgs, features = markers, swap_rownames="gene_name", 
+                   group="precast_k7_ordered",
+                   scale=TRUE, center=TRUE, 
+                   cluster_rows=FALSE, cluster_cols=FALSE)
+plotGroupedHeatmap(spe_svgs, features = markers, swap_rownames="gene_name",
+                   group="precast_k7_nobias_ordered",
+                   scale=TRUE, center=TRUE, 
+                   cluster_rows=FALSE, cluster_cols=FALSE)
+
+l2 = unique(spe_svgs$sample_id)
+names(l2) = l2
+l2 = lapply(l2, function(x) spe_svgs[,colData(spe_svgs)$sample_id==x])
+
+col.pal1 = c("#1f77b4FF","#aec7e8FF","#ffbb78FF","#2ca02cFF","#ff7f0eFF","#d62728FF","#ff9896FF")
+col.pal2 = c("#1f77b4FF","#ffbb78FF","#2ca02cFF","#98df8aFF","#ff7f0eFF","#d62728FF","#ff9896FF")
+
+c1 <- lapply(seq_along(l2), function(x) {
+  plotSpots(l2[[x]], annotate="precast_k7_ordered")+
+    labs(color="clus")+
+    scale_color_manual(values=col.pal1)+
+    theme(plot.title=element_text(size=8))
+})
+drawFigs(c1, layout.dim = c(1, 4), common.legend = TRUE, legend.position = "right", align = "h")
+
+c2 <- lapply(seq_along(l2), function(x) {
+  plotSpots(l2[[x]], annotate="precast_k7_nobias_ordered")+
+    labs(color="clus")+
+    scale_color_manual(values=col.pal2)+
+    theme(plot.title=element_text(size=8))
+})
+drawFigs(c2, layout.dim = c(1, 4), common.legend = TRUE, legend.position = "right", align = "h")
+```
+
+Please read [reference documentation](https://github.com/jac-thom/findBiasedFeatures) for detailed codes and scripts conducting PRECAST clustering [before](https://github.com/jac-thom/findBiasedFeatures/blob/main/code/02_spatialHPC_PRECAST-svgs.R) and [after](https://github.com/jac-thom/findBiasedFeatures/blob/main/code/05_spatialHPC_PRECAST-svgs-no-bias.R) removing the biased gene.
 
 # `R` session information {.unnumbered}
 
