@@ -41,28 +41,34 @@ The methodology details can be found in [Find Bias Feature](https://jac-thom.git
 remotes::install("christinehou11/BiasDetect")
 ```
 
-### Load Necessary Packages
+### Setup
 
-Install additional required packages before running package codes.
+Install `BiasDetect`
 
-```{r 'pkg install', eval=FALSE}
-pkgs <- c("dplyr", "tidyr", "scry", "SummarizedExperiment","SpatialExperiment")
-required_pkgs <- pkgs[!pkgs %in% rownames(installed.packages())]
-BiocManager::install(required_pkgs)
+```{r, eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+    install.packages("BiocManager")
+}
+
+BiocManager::install("BiasDetect")
+
+## Check that you have a valid Bioconductor installation
+BiocManager::valid()
 ```
 
-Load additional packages. `dplyr` package is widely used in this vignettes to conduct data wrangling and specific information extraction.
+Load required packages
 
 ```{r 'library', message=FALSE}
-library(BiasDetect)
-require(SummarizedExperiment)
-require(SpatialExperiment)
-require(ggplot2)
+library("BiasDetect")
+library("SummarizedExperiment")
+library("ggplot2")
 ```
 
 ### Data
 
 The dataset in this tutorial section is from [spatialHPC](https://github.com/LieberInstitute/spatial_hpc).
+
+The original `SpatialExperiment` object was processed by `nnSVG()` function to identify the spatially variable genes (SVGs), and the sample spe object was obtained by filtering out the SVGs. This is specifically designed for our analysis section since the big size of the original 
 
 ```{r data input}
 data(spe)
