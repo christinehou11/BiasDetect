@@ -22,10 +22,9 @@ with and without the selected batch effect."></head><body>
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/00_background.html">Background</a></li>
-    <li><a class="dropdown-item" href="../articles/01_tutorial.html">Find Bias Features</a></li>
-    <li><a class="dropdown-item" href="../articles/02_analysis_spe.html">Analysis - Spatial Transcriptimics Data</a></li>
-    <li><a class="dropdown-item" href="../articles/03_analysis_sce.html">Analysis - snRNA-seq Data</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/background.html">Background</a></li>
+    <li><a class="dropdown-item" href="../articles/tutorial_sce.html">Find Bias Features - snRNA-seq Data</a></li>
+    <li><a class="dropdown-item" href="../articles/tutorial_spe.html">Find Bias Features - Spatial Transcriptomics Data</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -97,12 +96,19 @@ rank cutoff.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># library(spatialLIBD)</span></span></span>
-<span class="r-in"><span><span class="co"># spe &lt;- fetch_data(type = "spe")</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/SummarizedExperiment" class="external-link">SummarizedExperiment</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">spe</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">spe_svgs</span> <span class="op">&lt;-</span> <span class="va">spe</span></span></span>
+<span class="r-in"><span><span class="co"># the sample dataset here is the SpatialExperiment object containing only</span></span></span>
+<span class="r-in"><span><span class="co"># spatially variable genes</span></span></span>
+<span class="r-in"><span><span class="va">SVGs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">rowData</a></span><span class="op">(</span><span class="va">spe</span><span class="op">)</span><span class="op">$</span><span class="va">gene_name</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># featureSelect(spe, batch_effect = "brain", VGs = SVGs)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">batch_df</span> <span class="op">&lt;-</span> <span class="fu">featureSelect</span><span class="op">(</span><span class="va">spe_svgs</span>, batch_effect <span class="op">=</span> <span class="st">"sample_id"</span>, VGs <span class="op">=</span> <span class="va">SVGs</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Step 1: Running feature selection without batch...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Step 2: Running feature selection with batch...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Step 3: Calculating deviance and rank difference...</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
